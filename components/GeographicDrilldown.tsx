@@ -100,7 +100,7 @@ const GeographicDrilldown: React.FC<GeographicDrilldownProps> = ({ hotspots, met
                 <h4 className="text-sm font-bold text-amber-800">Intervention Logic</h4>
                 <p className="text-xs text-amber-700 mt-1 leading-relaxed">
                     SMA recommends allocating resources based on <strong>Census Tract deviation</strong>. 
-                    Neighborhoods with >1.5x the regional unemployment rate should be designated as "Priority Enterprise Zones" for direct equity investment.
+                    Neighborhoods with &gt;1.5x the regional unemployment rate should be designated as "Priority Enterprise Zones" for direct equity investment.
                 </p>
             </div>
         </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { GeographicHotspot, LaborStats } from '../types';
-import { Map, AlertCircle, TrendingUp, Target } from 'lucide-react';
+import { Map, AlertCircle, Target } from 'lucide-react';
 
 interface GeographicDrilldownProps {
   hotspots: GeographicHotspot[];

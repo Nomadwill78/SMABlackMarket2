@@ -9,11 +9,14 @@ import CapitalBarriers from './components/CapitalBarriers';
 import GeographicDrilldown from './components/GeographicDrilldown';
 import TrendAnalysis from './components/TrendAnalysis';
 import DataStatus from './components/DataStatus';
-import { Menu, X, ChevronDown, MapPin, Loader2, Download } from 'lucide-react';
+import CostOfCapitalCalculator from './components/CostOfCapitalCalculator';
+import IndustryDeepDive from './components/IndustryDeepDive';
+
+import { Menu, X, ChevronDown, MapPin, Loader2, Download, Users, Briefcase, Wallet, ShieldCheck } from 'lucide-react';
 
 const App: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'equity' | 'simulator'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'equity' | 'simulator' | 'strategy'>('overview');
   
   // Data State
   const [regionId, setRegionId] = useState<string>('memphis');
@@ -22,6 +25,11 @@ const App: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const availableRegions = EconomicDataService.getAvailableRegions();
+
+  // Scroll to top on tab change
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [activeTab]);
 
   // Async Fetch Effect
   useEffect(() => {
@@ -59,6 +67,26 @@ const App: React.FC = () => {
       }
   };
 
+  // Helper to get icon for hero cards
+  const getIndicatorIcon = (id: string) => {
+    switch(id) {
+        case 'unemp': return <Users size={24} className="text-white" />;
+        case 'biz-own': return <Briefcase size={24} className="text-white" />;
+        case 'wage': return <Wallet size={24} className="text-white" />;
+        default: return <Users size={24} className="text-white" />;
+    }
+  };
+
+  // Helper for gradient backgrounds
+  const getIndicatorGradient = (id: string) => {
+      switch(id) {
+          case 'unemp': return 'from-blue-500 to-blue-600';
+          case 'biz-own': return 'from-amber-500 to-amber-600';
+          case 'wage': return 'from-emerald-500 to-emerald-600';
+          default: return 'from-indigo-500 to-indigo-600';
+      }
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans">
       
@@ -66,78 +94,73 @@ const App: React.FC = () => {
       <DataStatus 
         isLoading={isLoading} 
         lastUpdated={data?.lastUpdated || null} 
-        regionName={data?.context.name || "Unknown"} 
         metadata={data?.sourceMetadata}
       />
 
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-slate-900 text-white border-b border-slate-800 shadow-lg">
+      <header className="sticky top-0 z-50 bg-[#0A0A0A] text-white border-b border-white/10 backdrop-blur-md bg-opacity-90">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-gradient-to-br from-amber-400 to-amber-600 rounded flex items-center justify-center font-bold text-slate-900 text-xs shadow-inner">
-                  SMA
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-3 group cursor-pointer">
+                <div className="w-10 h-10 bg-white text-black rounded-full flex items-center justify-center font-serif font-bold text-lg shadow-[0_0_15px_rgba(255,255,255,0.3)] transition-transform group-hover:scale-105">
+                  S
                 </div>
                 <div className="flex flex-col">
-                  <span className="font-bold text-base leading-none">Economic Equity Dashboard</span>
+                  <span className="font-serif font-bold text-xl tracking-tight">SMA</span>
+                  <span className="text-[10px] uppercase tracking-widest text-gray-400 font-medium">Economic Equity</span>
                 </div>
               </div>
               
               {/* Region Selector */}
-              <div className="hidden md:flex items-center ml-4 bg-slate-800 rounded-md border border-slate-700 px-3 py-1">
-                <MapPin size={14} className="text-slate-400 mr-2" />
+              <div className="hidden md:flex items-center ml-6 bg-white/5 rounded-full border border-white/10 px-4 py-1.5 hover:bg-white/10 transition-colors">
+                <MapPin size={14} className="text-emerald-400 mr-2" />
                 <select 
                   value={regionId} 
                   onChange={handleRegionChange}
-                  className="bg-transparent text-sm text-white focus:outline-none cursor-pointer"
+                  className="bg-transparent text-sm text-white focus:outline-none cursor-pointer font-medium"
                   disabled={isLoading}
                 >
                   {availableRegions.map(r => (
-                    <option key={r.id} value={r.id} className="bg-slate-800">{r.name}</option>
+                    <option key={r.id} value={r.id} className="bg-slate-900 text-white">{r.name}</option>
                   ))}
                 </select>
-                <ChevronDown size={14} className="text-slate-400 ml-2" />
+                <ChevronDown size={14} className="text-gray-400 ml-2" />
               </div>
             </div>
 
             {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center gap-1">
-              <button 
-                onClick={() => setActiveTab('overview')}
-                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                    activeTab === 'overview' ? 'bg-slate-800 text-amber-400' : 'text-slate-300 hover:text-white hover:bg-slate-800'
-                }`}
-              >
-                Regional Pulse
-              </button>
-              <button 
-                onClick={() => setActiveTab('equity')}
-                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                    activeTab === 'equity' ? 'bg-slate-800 text-amber-400' : 'text-slate-300 hover:text-white hover:bg-slate-800'
-                }`}
-              >
-                Equity Gaps
-              </button>
-              <button 
-                onClick={() => setActiveTab('simulator')}
-                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                    activeTab === 'simulator' ? 'bg-slate-800 text-amber-400' : 'text-slate-300 hover:text-white hover:bg-slate-800'
-                }`}
-              >
-                Impact Simulator
-              </button>
+            <nav className="hidden md:flex items-center gap-2">
+              {[
+                { id: 'overview', label: 'Regional Pulse' },
+                { id: 'equity', label: 'Equity Gaps' },
+                { id: 'simulator', label: 'Impact Simulator' },
+                { id: 'strategy', label: 'Industry Strategy', icon: ShieldCheck }
+              ].map((tab) => (
+                <button 
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as any)}
+                  className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 flex items-center gap-2 ${
+                      activeTab === tab.id 
+                        ? 'bg-white text-black shadow-lg transform scale-105' 
+                        : 'text-gray-400 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  {tab.icon && <tab.icon size={14} />}
+                  {tab.label}
+                </button>
+              ))}
               
-              <div className="w-px h-6 bg-slate-700 mx-2"></div>
+              <div className="w-px h-6 bg-white/10 mx-4"></div>
               
               <button 
                 onClick={handleExport}
                 disabled={isLoading}
-                className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-2 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-bold px-4 py-2 rounded-full transition-all shadow-[0_0_15px_rgba(16,185,129,0.4)] hover:shadow-[0_0_20px_rgba(16,185,129,0.6)] disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
                 title="Download Data as CSV"
               >
                   <Download size={14} />
-                  Export
+                  Export Data
               </button>
             </nav>
 
@@ -170,6 +193,7 @@ const App: React.FC = () => {
                 <button onClick={() => { setActiveTab('overview'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2 text-white">Regional Pulse</button>
                 <button onClick={() => { setActiveTab('equity'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2 text-white">Equity Gaps</button>
                 <button onClick={() => { setActiveTab('simulator'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2 text-white">Impact Simulator</button>
+                <button onClick={() => { setActiveTab('strategy'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2 text-white">Industry Strategy</button>
                 <button onClick={() => { handleExport(); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2 text-emerald-400 font-bold border-t border-slate-700 mt-2">Download Data CSV</button>
              </div>
           </div>
@@ -201,99 +225,123 @@ const App: React.FC = () => {
             <div className="space-y-8 animate-fade-in">
                 
                 {activeTab === 'overview' && (
-                    <div className="space-y-8">
-                        {/* Hero Stats */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            {data.indicators.map((indicator) => (
-                                <div key={indicator.id} className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-                                    <h3 className="text-sm font-medium text-slate-500 mb-2">{indicator.label}</h3>
-                                    <div className="flex items-end gap-3 mb-2">
-                                        <span className="text-3xl font-bold text-slate-900">{indicator.value}</span>
-                                        <span className={`text-xs font-bold px-2 py-1 rounded mb-1 ${
-                                            indicator.trend === 'up' ? 'bg-red-100 text-red-700' : 
-                                            indicator.trend === 'down' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-700'
-                                        }`}>
-                                            {indicator.trendLabel}
-                                        </span>
-                                    </div>
-                                    <p className="text-xs text-slate-400 border-t border-slate-100 pt-2 mt-2">{indicator.context}</p>
+                            <div className="space-y-12">
+                                {/* Hero Stats */}
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    {data.indicators.map((indicator) => (
+                                        <div key={indicator.id} className="relative bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all group overflow-hidden">
+                                            <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-br ${getIndicatorGradient(indicator.id)} opacity-10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110`}></div>
+                                            
+                                            <div className="relative z-10">
+                                                <div className="flex items-center justify-between mb-4">
+                                                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest">{indicator.label}</h3>
+                                                    <div className={`p-2 rounded-full bg-gray-50 text-gray-400 group-hover:text-gray-600 transition-colors`}>
+                                                        {getIndicatorIcon(indicator.id)}
+                                                    </div>
+                                                </div>
+                                                
+                                                <div className="flex items-baseline gap-3 mb-2">
+                                                    <span className="text-4xl font-mono font-medium text-gray-900 tracking-tight">{indicator.value}</span>
+                                                    <span className={`text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1 ${
+                                                        indicator.trend === 'up' ? 'bg-red-50 text-red-600' : 
+                                                        indicator.trend === 'down' ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-50 text-gray-600'
+                                                    }`}>
+                                                        {indicator.trendLabel}
+                                                    </span>
+                                                </div>
+                                                <p className="text-sm text-gray-500 mt-2 font-medium border-t border-gray-100 pt-3">{indicator.context}</p>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
-                            ))}
-                        </div>
-                        
-                        {/* Geographic Deep Dive */}
-                        <GeographicDrilldown 
-                            hotspots={data.hotspots} 
-                            metroStats={data.laborStats}
-                            metroName={data.context.name}
-                        />
+                                
+                                {/* Geographic Deep Dive */}
+                                <GeographicDrilldown 
+                                    hotspots={data.hotspots} 
+                                    metroStats={data.laborStats}
+                                    metroName={data.context.name}
+                                />
 
-                        {/* Labor Market Deep Dive */}
-                        <LaborMarketAnalysis stats={data.laborStats} regionName={data.context.name} />
+                                {/* Labor Market Deep Dive */}
+                                <LaborMarketAnalysis stats={data.laborStats} />
 
-                        <SectorOpportunities sectors={data.sectors} />
+                                <SectorOpportunities sectors={data.sectors} />
 
-                        <div className="bg-indigo-900 rounded-xl p-8 text-white flex flex-col md:flex-row items-center gap-6 shadow-xl">
-                            <div className="flex-1">
-                                <h2 className="text-2xl font-bold mb-2">Why This Matters</h2>
-                                <p className="text-indigo-200 text-lg leading-relaxed">
-                                    "The goal isn't just to increase black employment—it's to capture the multiplier effect. When we own the supply chain, the dollar circulates within our community instead of leaking out."
-                                </p>
+                                <div className="bg-[#111827] rounded-3xl p-10 text-white flex flex-col md:flex-row items-center gap-10 shadow-2xl relative overflow-hidden">
+                                    {/* Decorative background element */}
+                                    <div className="absolute -right-20 -top-20 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl"></div>
+                                    <div className="absolute -left-20 -bottom-20 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl"></div>
+                                    
+                                    <div className="flex-1 relative z-10">
+                                        <h2 className="text-3xl font-serif font-medium mb-4">Why This Matters</h2>
+                                        <p className="text-gray-300 text-lg leading-relaxed font-light">
+                                            "The goal isn't just to increase black employment—it's to capture the multiplier effect. When we own the supply chain, the dollar circulates within our community instead of leaking out."
+                                        </p>
+                                    </div>
+                                    <div className="shrink-0 relative z-10">
+                                        <button 
+                                            onClick={() => setActiveTab('strategy')}
+                                            className="bg-white text-black hover:bg-gray-100 px-8 py-4 rounded-full font-bold transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] flex items-center gap-3"
+                                        >
+                                            View Sector Strategy
+                                            <ShieldCheck size={18} />
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="shrink-0">
-                                 <button 
-                                    onClick={() => setActiveTab('simulator')}
-                                    className="bg-amber-400 text-slate-900 hover:bg-amber-300 px-6 py-3 rounded-lg font-bold transition-colors shadow-lg"
-                                 >
-                                    Run Impact Simulation
-                                 </button>
+                        )}
+
+                        {activeTab === 'equity' && (
+                            <div className="space-y-8">
+                                <div className="bg-white p-6 rounded-xl border border-slate-200">
+                                    <h2 className="text-lg font-bold text-slate-800 mb-2">Structural Analysis: {data.context.name}</h2>
+                                    <p className="text-slate-600 max-w-3xl">
+                                        These charts visualize the "starting line" disparity in {data.context.state}. Policy interventions that ignore these wealth and capital gaps will fail to produce equitable outcomes. SMA focuses on <strong>Asset-Building</strong> rather than just income.
+                                    </p>
+                                </div>
+                                <EquityDashboard data={data.gaps} />
+                                
+                                <TrendAnalysis trends={data.historicalTrends} />
+
+                                {/* DEEP DIVE: Capital Barriers */}
+                                <div className="grid grid-cols-1 gap-8">
+                                <CapitalBarriers data={data.capitalMetrics} />
+                                
+                                <CostOfCapitalCalculator metrics={data.capitalMetrics} />
+                                </div>
                             </div>
-                        </div>
+                        )}
+
+                        {activeTab === 'simulator' && (
+                            <div className="space-y-8">
+                                <ImpactSimulator sectors={data.sectors} />
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="bg-white p-6 rounded-xl border border-slate-200">
+                                        <h3 className="font-bold text-slate-800 mb-2">For Policymakers</h3>
+                                        <p className="text-sm text-slate-600">
+                                            Use this data to justify procurement set-asides. If a project uses "Green Construction," require local hiring to trigger the 1.85x multiplier shown above.
+                                        </p>
+                                    </div>
+                                    <div className="bg-white p-6 rounded-xl border border-slate-200">
+                                        <h3 className="font-bold text-slate-800 mb-2">For Philanthropy</h3>
+                                        <p className="text-sm text-slate-600">
+                                            Stop funding "training" without demand. Fund the <strong>Business Owners</strong> in the high-multiplier sectors so they can afford to hire the trainees.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {activeTab === 'strategy' && (
+                            <div className="space-y-8">
+                                <IndustryDeepDive sectors={data.sectors} />
+                            </div>
+                        )}
                     </div>
                 )}
-
-                {activeTab === 'equity' && (
-                    <div className="space-y-8">
-                         <div className="bg-white p-6 rounded-xl border border-slate-200">
-                            <h2 className="text-lg font-bold text-slate-800 mb-2">Structural Analysis: {data.context.name}</h2>
-                            <p className="text-slate-600 max-w-3xl">
-                                These charts visualize the "starting line" disparity in {data.context.state}. Policy interventions that ignore these wealth and capital gaps will fail to produce equitable outcomes. SMA focuses on <strong>Asset-Building</strong> rather than just income.
-                            </p>
-                         </div>
-                        <EquityDashboard data={data.gaps} />
-                        
-                        {/* NEW: Trend Analysis */}
-                        <TrendAnalysis trends={data.historicalTrends} />
-
-                        {/* DEEP DIVE: Capital Barriers */}
-                        <CapitalBarriers data={data.capitalMetrics} />
-                    </div>
-                )}
-
-                {activeTab === 'simulator' && (
-                    <div className="space-y-8">
-                        <ImpactSimulator sectors={data.sectors} />
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="bg-white p-6 rounded-xl border border-slate-200">
-                                <h3 className="font-bold text-slate-800 mb-2">For Policymakers</h3>
-                                <p className="text-sm text-slate-600">
-                                    Use this data to justify procurement set-asides. If a project uses "Green Construction," require local hiring to trigger the 1.85x multiplier shown above.
-                                </p>
-                            </div>
-                            <div className="bg-white p-6 rounded-xl border border-slate-200">
-                                 <h3 className="font-bold text-slate-800 mb-2">For Philanthropy</h3>
-                                 <p className="text-sm text-slate-600">
-                                    Stop funding "training" without demand. Fund the <strong>Business Owners</strong> in the high-multiplier sectors so they can afford to hire the trainees.
-                                 </p>
-                            </div>
-                        </div>
-                    </div>
-                )}
-            </div>
-        )}
-      </main>
-    </div>
-  );
+            </main>
+        </div>
+    );
 };
 
 export default App;

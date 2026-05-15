@@ -5,11 +5,10 @@ import { SourceMetadata } from '../types';
 interface DataStatusProps {
   isLoading: boolean;
   lastUpdated: string | null;
-  regionName: string;
   metadata?: SourceMetadata;
 }
 
-const DataStatus: React.FC<DataStatusProps> = ({ isLoading, lastUpdated, regionName, metadata }) => {
+const DataStatus: React.FC<DataStatusProps> = ({ isLoading, lastUpdated, metadata }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (

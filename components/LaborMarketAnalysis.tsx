@@ -1,13 +1,12 @@
 import React from 'react';
 import { LaborStats } from '../types';
-import { Users, AlertTriangle, TrendingDown, HelpCircle, Activity } from 'lucide-react';
+import { Users, AlertTriangle, HelpCircle } from 'lucide-react';
 
 interface LaborMarketAnalysisProps {
   stats: LaborStats;
-  regionName: string;
 }
 
-const LaborMarketAnalysis: React.FC<LaborMarketAnalysisProps> = ({ stats, regionName }) => {
+const LaborMarketAnalysis: React.FC<LaborMarketAnalysisProps> = ({ stats }) => {
   const hiddenUnemployedRate = (stats.underemploymentRate - stats.officialUnemploymentRate).toFixed(1);
   const participationGap = (stats.whiteLaborForceParticipationRate - stats.laborForceParticipationRate).toFixed(1);
   const u6GapMultiplier = (stats.underemploymentRate / stats.whiteUnderemploymentRate).toFixed(1);

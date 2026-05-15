@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { HistoricalTrend } from '../types';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { TrendingUp, Calendar, AlertTriangle, ArrowRight } from 'lucide-react';
+import { TrendingUp, Calendar, ArrowRight } from 'lucide-react';
 
 interface TrendAnalysisProps {
   trends: HistoricalTrend[];

@@ -1,6 +1,6 @@
 import React from 'react';
 import { CapitalMetrics } from '../types';
-import { Ban, DollarSign, TrendingUp, AlertCircle, Lock } from 'lucide-react';
+import { Ban, DollarSign, AlertCircle, Lock, TrendingUp } from 'lucide-react';
 
 interface CapitalBarriersProps {
   data: CapitalMetrics;

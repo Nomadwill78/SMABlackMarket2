@@ -23,7 +23,8 @@ export class EconomicDataService {
     // 3. Return a copy to ensure immutability
     return {
       ...data,
-      lastUpdated: new Date().toISOString() // Simulate fresh fetch timestamp
+      // Retain the sample's stored reference date; loading is not a data refresh.
+      lastUpdated: data.lastUpdated
     };
   }
 
@@ -40,7 +41,8 @@ export class EconomicDataService {
     const rows = [];
     
     // Header
-    rows.push(['SMA ECONOMIC EQUITY EXPORT', `Region: ${data.context.name}`, `Date: ${new Date().toISOString()}`]);
+    rows.push(['SMA ECONOMIC EQUITY EXPORT', `Region: ${data.context.name}`, `Exported: ${new Date().toISOString()}`]);
+    rows.push(['ILLUSTRATIVE SAMPLE DATA - not a live feed or verified current contract listing']);
     rows.push([]);
 
     // 1. GAPS & BENCHMARKS

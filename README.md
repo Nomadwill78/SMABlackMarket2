@@ -1,20 +1,5 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Southern Black Economy Dashboard — sample data
 
-# Run and deploy your AI Studio app
+This prototype uses illustrative values stored in `constants.ts`. It does not connect to BLS, Census, FRED, or live procurement feeds. Reference-period labels are sample metadata, not verified source observations. Do not use these values for funding, investment, or policy decisions.
 
-This contains everything you need to run your app locally.
-
-View your app in AI Studio: https://ai.studio/apps/f5f77adf-7e8c-4cdd-9f08-a0f5bd6027f1
-
-## Run Locally
-
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Run `npm install`, then `npm run dev`. Validate with `npm run build`. A future live-data implementation must document source URLs, retrieval dates, and missing-data behavior before changing the sample labels.

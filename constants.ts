@@ -38,7 +38,7 @@ export const POLICY_SCENARIOS: PolicyScenario[] = [
 // MOCK DATABASE simulating API responses from BLS, Census ACS, and FRED
 export const REGION_DB: Record<string, RegionDataBundle> = {
   'memphis': {
-    lastUpdated: new Date().toISOString(),
+    lastUpdated: "", // No verified observation timestamp for this illustrative sample.
     sourceMetadata: {
         blsDate: 'Nov 2024 (Prelim)',
         censusDate: '2023 ACS 1-Year',
@@ -278,7 +278,7 @@ export const REGION_DB: Record<string, RegionDataBundle> = {
     ]
   },
   'birmingham': {
-    lastUpdated: new Date().toISOString(),
+    lastUpdated: "", // No verified observation timestamp for this illustrative sample.
     sourceMetadata: {
         blsDate: 'Nov 2024 (Prelim)',
         censusDate: '2023 ACS 1-Year',
@@ -482,7 +482,7 @@ export const REGION_DB: Record<string, RegionDataBundle> = {
     ]
   },
   'atlanta': {
-    lastUpdated: new Date().toISOString(),
+    lastUpdated: "", // No verified observation timestamp for this illustrative sample.
     sourceMetadata: {
         blsDate: 'Nov 2024 (Prelim)',
         censusDate: '2023 ACS 1-Year',

@@ -113,7 +113,7 @@ const SectorOpportunities: React.FC<SectorOpportunitiesProps> = ({ sectors }) =>
                                     <div className="p-1.5 bg-indigo-50 rounded-md">
                                         <FileText size={16} className="text-indigo-600" />
                                     </div>
-                                    <span className="text-sm uppercase tracking-wide">Live Contract Tracker</span>
+                                    <span className="text-sm uppercase tracking-wide">Illustrative Contract Tracker</span>
                                 </div>
                                 <div className="space-y-3">
                                     {sector.activeRFPs.map((rfp) => (

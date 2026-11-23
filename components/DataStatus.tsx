@@ -18,7 +18,7 @@ const DataStatus: React.FC<DataStatusProps> = ({ isLoading, lastUpdated, metadat
                 <div className="flex items-center gap-1.5">
                 <Activity size={12} className={isLoading ? "animate-pulse text-amber-400" : "text-emerald-500"} />
                 <span>
-                    {isLoading ? "Connecting to Government Data Feeds..." : "Live Connection Active"}
+                    {isLoading ? "Loading sample data..." : "Sample data — not a live government feed"}
                 </span>
                 </div>
                 
@@ -29,7 +29,7 @@ const DataStatus: React.FC<DataStatusProps> = ({ isLoading, lastUpdated, metadat
                         className="flex items-center gap-1.5 text-slate-500 hover:text-slate-300 transition-colors"
                     >
                         <Database size={12} />
-                        <span>View Source Timestamps</span>
+                        <span>View reference periods</span>
                         <ChevronDown size={12} className={`transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                     </button>
                 )}
@@ -38,7 +38,7 @@ const DataStatus: React.FC<DataStatusProps> = ({ isLoading, lastUpdated, metadat
             {!isLoading && lastUpdated && (
                 <div className="flex items-center gap-1.5">
                 <Clock size={12} />
-                <span>Dash updated: {new Date(lastUpdated).toLocaleTimeString()}</span>
+                <span>Sample reference date: {new Date(lastUpdated).toLocaleDateString()}</span>
                 </div>
             )}
         </div>
